@@ -199,8 +199,13 @@ class Capture:
                 # SafeChildWatcher O(n) -> large numbers of processes are slow
                 # ThreadedChildWatcher O(1) -> independent of process number
                 # asyncio.get_child_watcher().attach_loop(self.eventloop)
-                asyncio.set_child_watcher(asyncio.SafeChildWatcher())
-                asyncio.get_child_watcher().attach_loop(self.eventloop)
+                
+                # Python 3.12+ removed child watchers, so we need to check version
+                import sys
+                if sys.version_info < (3, 12):
+                    asyncio.set_child_watcher(asyncio.SafeChildWatcher())
+                    asyncio.get_child_watcher().attach_loop(self.eventloop)
+                # For Python 3.12+, child watchers are no longer needed
 
     def _packets_from_tshark_sync(self, packet_count=None, existing_process=None):
         """Returns a generator of packets.
