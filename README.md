@@ -65,7 +65,15 @@ A web application for analyzing 5G control plane traffic from PCAP files using A
    npm install
    ```
 
-3. Run the development server:
+3. Set up authentication (optional):
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   Edit `.env.local` and set:
+   - `SITE_PASSWORD`: Password to access the site (default: "5g-analyzer-2024")
+   - `COOKIE_SECRET`: Secret key for signing cookies (generate a random string)
+
+4. Run the development server:
    ```bash
    npm run dev
    ```
@@ -74,9 +82,19 @@ A web application for analyzing 5G control plane traffic from PCAP files using A
 ## Usage
 
 1. Open http://localhost:3000 in your browser
-2. Click the upload area to select a PCAP file
-3. Once uploaded, you can ask questions about the 5G call flow
-4. The AI will analyze the packets and provide insights
+2. Enter the password (default: "5g-analyzer-2024" or as configured)
+3. Click the upload area to select a PCAP file
+4. Once uploaded, you can ask questions about the 5G call flow
+5. The AI will analyze the packets and provide insights
+
+## Authentication
+
+The application includes password protection to restrict access. To configure:
+
+- Set `SITE_PASSWORD` environment variable in the frontend
+- Default password: "5g-analyzer-2024"
+- Users will be prompted to enter the password on first access
+- Authentication persists for 7 days via secure cookie
 
 ## Example Questions
 

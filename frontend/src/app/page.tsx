@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Upload, X, FileText, Loader2 } from "lucide-react";
+import { Send, Upload, X, FileText, Loader2, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: string;
@@ -25,6 +26,7 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -145,16 +147,33 @@ export default function Home() {
     setMessages([]);
   };
 
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          5G Callflow Analyzer
-        </h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-          Upload PCAP files and analyze 5G control plane traffic
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              5G Callflow Analyzer
+            </h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              Upload PCAP files and analyze 5G control plane traffic
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
+        </div>
       </header>
 
       {/* File Upload Area */}
